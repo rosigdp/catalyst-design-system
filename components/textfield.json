@@ -1,0 +1,96 @@
+{
+  "component": "textfield",
+
+  "radius": "radius.default",
+
+  "gap": "spacing.xs",
+
+  "content": {
+    "label": {
+      "typography": "typography.label"
+    },
+
+    "value": {
+      "typography": "typography.body"
+    },
+
+    "placeholder": {
+      "typography": "typography.body",
+      "color": "theme.system.foreground70"
+    },
+
+    "supportingText": {
+      "typography": "typography.small"
+    },
+
+    "icon": {
+      "typography": "typography.icon",
+      "color": "theme.system.foreground70"
+    }
+  },
+
+  "modes": {
+    "edit": {
+      "sizes": {
+        "default": {
+          "paddingY": "spacing.sm",
+          "paddingX": "spacing.md"
+        }
+      }
+    },
+
+    "view": {}
+  },
+
+  "types": {
+    "singleLine": {
+      "textWrap": false,
+      "resize": false
+    },
+
+    "multiLine": {
+      "textWrap": true,
+      "resize": true
+    }
+  },
+
+  "states": {
+    "default": {
+      "background": "theme.system.background",
+      "text": "theme.system.foreground",
+      "border": {
+        "width": 1,
+        "color": "theme.system.foreground20"
+      }
+    },
+
+    "focused": {
+      "background": "theme.system.background",
+      "text": "theme.system.foreground",
+      "border": {
+        "width": 1,
+        "color": "theme.brand.default"
+      },
+      "shadow": "effects.glow.inputActive"
+    },
+
+    "error": {
+      "background": "theme.system.background",
+      "text": "theme.system.foreground",
+      "border": {
+        "width": 1,
+        "color": "theme.negative.background"
+      },
+      "supportingText": "theme.negative.background"
+    },
+
+    "disabled": {
+      "background": "theme.disable.background",
+      "text": "theme.disable.foreground",
+      "border": {
+        "width": 1,
+        "color": "theme.disable.foreground20"
+      }
+    }
+  }
+}

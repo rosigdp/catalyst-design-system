@@ -1,0 +1,73 @@
+{
+  "component": "avatar",
+
+  "aspectRatio": "1:1",
+
+  "sizes": {
+    "xs": 24,
+    "sm": 36,
+    "md": 72,
+    "lg": 108,
+    "xl": 144,
+    "custom": true
+  },
+
+  "shapes": {
+    "circle": {
+      "radius": "radius.full"
+    },
+
+    "square": {
+      "radius": "radius.default"
+    }
+  },
+
+  "visualizations": {
+    "image": {
+      "fit": "cover"
+    },
+
+    "initials": {
+      "maxCharacters": 2,
+      "text": {
+        "typography": "typography.body",
+        "color": "theme.system.onSurfaceBrand"
+      },
+      "background": "palettes.generated"
+    },
+
+    "placeholder": {
+      "background": "theme.disable.background",
+      "icon": {
+        "typography": "typography.icon",
+        "color": "theme.disable.foreground"
+      }
+    }
+  },
+
+  "supportingButton": {
+    "component": "button",
+    "shape": "circle",
+    "size": "default",
+    "variant": "secondary",
+    "placement": {
+      "horizontal": "right",
+      "vertical": "bottom",
+      "overlap": "50%"
+    }
+  },
+
+  "states": {
+    "default": {
+      "visualization": ["image", "initials"]
+    },
+
+    "empty": {
+      "visualization": "placeholder"
+    },
+
+    "disabled": {
+      "grayscale": true
+    }
+  }
+}

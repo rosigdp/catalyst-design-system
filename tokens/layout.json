@@ -1,0 +1,31 @@
+{
+  "container": {
+    "paddingX": {
+      "mobile": {
+        "from": "breakpoints.xs",
+        "to": "breakpoints.md",
+        "value": "spacing.md"
+      },
+      "tablet": {
+        "from": "breakpoints.md",
+        "to": "breakpoints.lg",
+        "value": "spacing.lg"
+      },
+      "desktop": {
+        "from": "breakpoints.lg",
+        "value": "spacing.xl"
+      }
+    }
+  },
+
+  "grid": {
+    "columnGap": "spacing.lg",
+    "rowGap": "spacing.lg"
+  },
+
+  "patterns": {
+    "buttonGroupGap": "spacing.xs",
+    "inputGroupGap": "spacing.sm",
+    "cardGroupGap": "spacing.md"
+  }
+}

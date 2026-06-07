@@ -1,0 +1,88 @@
+{
+  "component": "button",
+
+  "shapes": {
+    "default": {
+      "radius": "radius.default"
+    },
+
+    "circle": {
+      "radius": "radius.full"
+    }
+  },
+
+  "content": {
+    "text": {
+      "typography": "typography.body"
+    },
+
+    "leadingIcon": {
+      "typography": "typography.icon"
+    },
+
+    "trailingIcon": {
+      "typography": "typography.icon"
+    },
+
+    "gap": "spacing.sm"
+  },
+
+  "sizes": {
+    "default": {
+      "paddingY": "spacing.sm",
+      "paddingX": "spacing.lg"
+    },
+
+    "large": {
+      "paddingY": "spacing.md",
+      "paddingX": "spacing.lg"
+    }
+  },
+
+  "variants": {
+    "primary": {
+      "background": "theme.brand.default",
+      "text": "theme.system.onSurfaceBrand",
+      "icon": "theme.system.onSurfaceBrand",
+      "border": null,
+      "shadow": "effects.shadow.sm"
+    },
+
+    "secondary": {
+      "background": "theme.system.background",
+      "text": "theme.system.foreground",
+      "icon": "theme.system.foreground70",
+      "border": {
+        "width": 1,
+        "color": "theme.system.foreground20"
+      },
+      "shadow": null
+    },
+
+    "destructive": {
+      "background": "theme.negative.background",
+      "text": "theme.system.onSurfaceBrand",
+      "icon": "theme.system.onSurfaceBrand",
+      "border": null,
+      "shadow": "effects.shadow.sm"
+    }
+  },
+
+  "states": {
+    "hover": {
+      "backgroundOverlay": "theme.system.foreground20"
+    },
+
+    "focus": {
+      "outlineWidth": 2,
+      "outlineColor": "theme.accent.default",
+      "outlineRadius": "radius.default"
+    },
+
+    "disabled": {
+      "background": "theme.disable.background",
+      "text": "theme.disable.foreground",
+      "icon": "theme.disable.foreground"
+    }
+  }
+}

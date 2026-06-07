@@ -1,0 +1,29 @@
+{
+  "shadow": {
+    "sm": {
+      "offsetX": 0,
+      "offsetY": 1,
+      "blur": 5,
+      "spread": 2,
+      "color": "theme.system.shadowElevation"
+    },
+
+    "lg": {
+      "offsetX": 0,
+      "offsetY": 2,
+      "blur": 8,
+      "spread": 0,
+      "color": "theme.system.shadowElevation"
+    }
+  },
+
+  "glow": {
+    "inputActive": {
+      "offsetX": 0,
+      "offsetY": 0,
+      "blur": 6,
+      "spread": 0,
+      "color": "theme.brand.50"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "radius": {
+    "default": 3,
+    "full": 9999
+  }
+}

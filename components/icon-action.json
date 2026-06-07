@@ -1,0 +1,37 @@
+{
+  "component": "iconAction",
+
+  "content": {
+    "icon": {
+      "typography": "typography.icon"
+    }
+  },
+
+  "variants": {
+    "action": {
+      "icon": "theme.system.foreground70"
+    },
+
+    "destructive": {
+      "icon": "theme.system.foreground70"
+    }
+  },
+
+  "states": {
+    "hover": {
+      "action": {
+        "icon": "theme.brand.default"
+      },
+
+      "destructive": {
+        "icon": "theme.negative.background"
+      }
+    },
+
+    "focus": {
+      "outlineWidth": 2,
+      "outlineColor": "theme.accent.default",
+      "outlineRadius": "radius.default"
+    }
+  }
+}

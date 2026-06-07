@@ -1,0 +1,203 @@
+{
+  "themes": {
+    "catapa": {
+      "light": {
+        "brand": {
+          "default": "rgba(0, 201, 131, 1)",
+          "10": "rgba(0, 201, 131, 0.1)",
+          "20": "rgba(0, 201, 131, 0.2)"
+        },
+        "accent": {
+          "default": "rgba(0, 153, 255, 1)",
+          "10": "rgba(0, 153, 255, 0.1)",
+          "20": "rgba(0, 153, 255, 0.2)"
+        },
+        "info": {
+          "background": "rgba(0, 153, 255, 1)",
+          "backgroundAlternate": "rgba(208, 243, 255, 1)",
+          "foreground": "rgba(0, 107, 179, 1)",
+          "foreground20": "rgba(0, 107, 179, 0.2)"
+        },
+        "positive": {
+          "background": "rgba(0, 201, 131, 1)",
+          "backgroundAlternate": "rgba(209, 247, 211, 1)",
+          "foreground": "rgba(0, 101, 66, 1)",
+          "foreground20": "rgba(0, 101, 66, 0.2)"
+        },
+        "negative": {
+          "background": "rgba(217, 98, 79, 1)",
+          "backgroundAlternate": "rgba(255, 219, 219, 1)",
+          "foreground": "rgba(217, 98, 79, 1)",
+          "foreground20": "rgba(217, 98, 79, 0.2)"
+        },
+        "warning": {
+          "background": "rgba(255, 184, 0, 1)",
+          "backgroundAlternate": "rgba(255, 249, 223, 1)",
+          "foreground": "rgba(225, 119, 22, 1)",
+          "foreground20": "rgba(225, 119, 22, 0.2)"
+        },
+        "disable": {
+          "background": "rgba(232, 232, 232, 1)",
+          "backgroundAlternate": "rgba(241, 241, 241, 1)",
+          "foreground": "rgba(119, 119, 119, 1)",
+          "foreground20": "rgba(119, 119, 119, 0.2)"
+        },
+        "system": {
+          "background": "rgba(255, 255, 255, 1)",
+          "background0": "rgba(255, 255, 255, 0)",
+          "backgroundAlternate": "rgba(248, 248, 248, 1)",
+          "foreground": "rgba(51, 51, 51, 1)",
+          "foreground10": "rgba(51, 51, 51, 0.1)",
+          "foreground20": "rgba(51, 51, 51, 0.2)",
+          "foreground70": "rgba(51, 51, 51, 0.7)",
+          "onSurfaceDark": "rgba(255, 255, 255, 1)",
+          "onSurfaceLight": "rgba(51, 51, 51, 1)",
+          "onSurfaceBrand": "rgba(255, 255, 255, 1)",
+          "logoLeaf": "rgba(0, 201, 131, 1)",
+          "logoBranch": "rgba(51, 34, 21, 1)",
+          "shadowElevation": "rgba(51, 51, 51, 0.2)"
+        }
+      },
+      "dark": {
+        "brand": {
+          "default": "rgba(0, 141, 92, 1)",
+          "10": "rgba(0, 141, 92, 0.1)",
+          "20": "rgba(0, 141, 92, 0.2)"
+        },
+        "accent": {
+          "default": "rgba(0, 138, 230, 1)",
+          "10": "rgba(0, 138, 230, 0.1)",
+          "20": "rgba(0, 138, 230, 0.2)"
+        },
+        "info": {
+          "background": "rgba(0, 138, 230, 1)",
+          "backgroundAlternate": "rgba(0, 46, 76, 1)",
+          "foreground": "rgba(179, 224, 255, 1)",
+          "foreground20": "rgba(179, 224, 255, 0.2)"
+        },
+        "positive": {
+          "background": "rgba(0, 141, 92, 1)",
+          "backgroundAlternate": "rgba(47, 80, 49, 1)",
+          "foreground": "rgba(179, 239, 218, 1)",
+          "foreground20": "rgba(179, 239, 218, 0.2)"
+        },
+        "negative": {
+          "background": "rgba(191, 92, 77, 1)",
+          "backgroundAlternate": "rgba(104, 53, 53, 1)",
+          "foreground": "rgba(255, 219, 219, 1)",
+          "foreground20": "rgba(255, 219, 219, 0.2)"
+        },
+        "warning": {
+          "background": "rgba(229, 172, 23, 1)",
+          "backgroundAlternate": "rgba(97, 84, 27, 1)",
+          "foreground": "rgba(255, 249, 223, 1)",
+          "foreground20": "rgba(255, 249, 223, 0.2)"
+        },
+        "disable": {
+          "background": "rgba(68, 68, 68, 1)",
+          "backgroundAlternate": "rgba(51, 51, 51, 1)",
+          "foreground": "rgba(119, 119, 119, 1)",
+          "foreground20": "rgba(119, 119, 119, 0.2)"
+        },
+        "system": {
+          "background": "rgba(51, 51, 51, 1)",
+          "background0": "rgba(51, 51, 51, 0)",
+          "backgroundAlternate": "rgba(42, 42, 42, 1)",
+          "foreground": "rgba(248, 248, 248, 1)",
+          "foreground10": "rgba(248, 248, 248, 0.1)",
+          "foreground20": "rgba(248, 248, 248, 0.2)",
+          "foreground70": "rgba(248, 248, 248, 0.7)",
+          "onSurfaceDark": "rgba(255, 255, 255, 1)",
+          "onSurfaceLight": "rgba(51, 51, 51, 1)",
+          "onSurfaceBrand": "rgba(255, 255, 255, 1)",
+          "logoLeaf": "rgba(255, 255, 255, 1)",
+          "logoBranch": "rgba(255, 255, 255, 1)",
+          "shadowElevation": "rgba(26, 26, 26, 0.4)"
+        }
+      }
+    },
+    "harmony": {
+      "light": {
+        "brand": {
+          "default": "rgba(51, 122, 183, 1)",
+          "10": "rgba(51, 122, 183, 0.1)",
+          "20": "rgba(51, 122, 183, 0.2)"
+        },
+        "accent": {
+          "default": "rgba(51, 122, 183, 1)",
+          "10": "rgba(51, 122, 183, 0.1)",
+          "20": "rgba(51, 122, 183, 0.2)"
+        },
+        "info": {
+          "background": "rgba(0, 153, 255, 1)",
+          "backgroundAlternate": "rgba(208, 243, 255, 1)",
+          "foreground": "rgba(0, 107, 179, 1)",
+          "foreground20": "rgba(0, 107, 179, 0.2)"
+        },
+        "positive": {
+          "background": "rgba(0, 201, 131, 1)",
+          "backgroundAlternate": "rgba(209, 247, 211, 1)",
+          "foreground": "rgba(0, 101, 66, 1)",
+          "foreground20": "rgba(0, 101, 66, 0.2)"
+        },
+        "negative": {
+          "background": "rgba(217, 98, 79, 1)",
+          "backgroundAlternate": "rgba(255, 219, 219, 1)",
+          "foreground": "rgba(217, 98, 79, 1)",
+          "foreground20": "rgba(217, 98, 79, 0.2)"
+        },
+        "warning": {
+          "background": "rgba(255, 184, 0, 1)",
+          "backgroundAlternate": "rgba(255, 249, 223, 1)",
+          "foreground": "rgba(225, 119, 22, 1)",
+          "foreground20": "rgba(225, 119, 22, 0.2)"
+        },
+        "disable": {
+          "background": "rgba(232, 232, 232, 1)",
+          "backgroundAlternate": "rgba(241, 241, 241, 1)",
+          "foreground": "rgba(119, 119, 119, 1)",
+          "foreground20": "rgba(119, 119, 119, 0.2)"
+        },
+        "system": {
+          "background": "rgba(255, 255, 255, 1)",
+          "background0": "rgba(255, 255, 255, 0)",
+          "backgroundAlternate": "rgba(248, 248, 248, 1)",
+          "foreground": "rgba(51, 51, 51, 1)",
+          "foreground10": "rgba(51, 51, 51, 0.1)",
+          "foreground20": "rgba(51, 51, 51, 0.2)",
+          "foreground70": "rgba(51, 51, 51, 0.7)",
+          "onSurfaceDark": "rgba(255, 255, 255, 1)",
+          "onSurfaceLight": "rgba(51, 51, 51, 1)",
+          "onSurfaceBrand": "rgba(255, 255, 255, 1)",
+          "logoLeaf": "rgba(0, 201, 131, 1)",
+          "logoBranch": "rgba(51, 34, 21, 1)",
+          "shadowElevation": "rgba(51, 51, 51, 0.2)"
+        }
+      }
+    }
+  },
+
+  "palettes": {
+    "generated": [
+      "rgba(3, 235, 199, 1)",
+      "rgba(26, 236, 249, 1)",
+      "rgba(34, 199, 255, 1)",
+      "rgba(45, 147, 251, 1)",
+      "rgba(69, 230, 92, 1)",
+      "rgba(73, 108, 231, 1)",
+      "rgba(107, 79, 242, 1)",
+      "rgba(134, 82, 251, 1)",
+      "rgba(163, 235, 5, 1)",
+      "rgba(203, 45, 247, 1)",
+      "rgba(221, 236, 29, 1)",
+      "rgba(234, 79, 190, 1)",
+      "rgba(249, 98, 122, 1)",
+      "rgba(250, 104, 60, 1)",
+      "rgba(254, 242, 71, 1)",
+      "rgba(255, 91, 184, 1)",
+      "rgba(255, 150, 43, 1)",
+      "rgba(255, 192, 43, 1)",
+      "rgba(255, 211, 80, 1)"
+    ]
+  }
+}

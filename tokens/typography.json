@@ -1,0 +1,96 @@
+{
+  "fontFamily": {
+    "default": "Open Sans",
+    "icon": "Font Awesome 5 Free"
+  },
+
+  "h1": {
+    "fontFamily": "Open Sans",
+    "fontSize": 24,
+    "lineHeight": 36,
+    "fontWeight": 700,
+    "textTransform": "title-case",
+    "color": "theme.system.foreground"
+  },
+
+  "h2": {
+    "fontFamily": "Open Sans",
+    "fontSize": 22,
+    "lineHeight": 32,
+    "fontWeight": 400,
+    "textTransform": "title-case",
+    "color": "theme.system.foreground"
+  },
+
+  "h3": {
+    "fontFamily": "Open Sans",
+    "fontSize": 14,
+    "lineHeight": 24,
+    "fontWeight": 700,
+    "textTransform": "uppercase",
+    "color": "theme.accent.default"
+  },
+
+  "h4": {
+    "fontFamily": "Open Sans",
+    "fontSize": 13,
+    "lineHeight": 24,
+    "fontWeight": 700,
+    "textTransform": "uppercase",
+    "color": "theme.system.foreground"
+  },
+
+  "h5": {
+    "fontFamily": "Open Sans",
+    "fontSize": 15,
+    "lineHeight": 24,
+    "fontWeight": 700,
+    "textTransform": "title-case",
+    "color": "theme.system.foreground"
+  },
+
+  "label": {
+    "fontFamily": "Open Sans",
+    "fontSize": 13,
+    "lineHeight": 18,
+    "fontWeight": 700,
+    "letterSpacing": 0.5,
+    "textTransform": "title-case",
+    "color": "theme.system.foreground"
+  },
+
+  "body": {
+    "fontFamily": "Open Sans",
+    "fontSize": 13,
+    "lineHeight": 20,
+    "fontWeight": 400,
+    "textTransform": "none",
+    "color": "theme.system.foreground"
+  },
+
+  "small": {
+    "fontFamily": "Open Sans",
+    "fontSize": 12,
+    "lineHeight": 18,
+    "fontWeight": 400,
+    "textTransform": "none",
+    "color": "theme.system.foreground"
+  },
+
+  "link": {
+    "fontFamily": "Open Sans",
+    "fontSize": 13,
+    "lineHeight": 20,
+    "fontWeight": 700,
+    "textDecoration": "underline",
+    "textTransform": "none",
+    "color": "theme.accent.default"
+  },
+
+  "icon": {
+    "fontFamily": "Font Awesome 5 Free",
+    "fontSize": 13,
+    "fontWeight": 900,
+    "color": "theme.system.foreground"
+  }
+}

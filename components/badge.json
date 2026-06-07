@@ -1,0 +1,65 @@
+{
+  "component": "badge",
+
+  "radius": "radius.full",
+
+  "content": {
+    "text": {
+      "typography": "typography.small"
+    }
+  },
+
+  "sizes": {
+    "default": {
+      "paddingY": "spacing.xs",
+      "paddingX": "spacing.md"
+    }
+  },
+
+  "variants": {
+    "positive": {
+      "background": "theme.positive.backgroundAlternate",
+      "text": "theme.positive.foreground",
+      "border": {
+        "width": 1,
+        "color": "theme.positive.foreground20"
+      }
+    },
+
+    "negative": {
+      "background": "theme.negative.backgroundAlternate",
+      "text": "theme.negative.foreground",
+      "border": {
+        "width": 1,
+        "color": "theme.negative.foreground20"
+      }
+    },
+
+    "warning": {
+      "background": "theme.warning.backgroundAlternate",
+      "text": "theme.warning.foreground",
+      "border": {
+        "width": 1,
+        "color": "theme.warning.foreground20"
+      }
+    },
+
+    "disable": {
+      "background": "theme.disable.backgroundAlternate",
+      "text": "theme.disable.foreground",
+      "border": {
+        "width": 1,
+        "color": "theme.disable.foreground20"
+      }
+    },
+
+    "info": {
+      "background": "theme.info.backgroundAlternate",
+      "text": "theme.info.foreground",
+      "border": {
+        "width": 1,
+        "color": "theme.info.foreground20"
+      }
+    }
+  }
+}
