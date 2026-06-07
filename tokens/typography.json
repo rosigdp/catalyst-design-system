@@ -54,7 +54,6 @@
     "fontSize": 13,
     "lineHeight": 18,
     "fontWeight": 700,
-    "letterSpacing": 0.5,
     "textTransform": "title-case",
     "color": "theme.system.foreground"
   },
