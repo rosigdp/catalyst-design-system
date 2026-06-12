@@ -17,8 +17,14 @@
     }
   },
 
-  "glow": {
-    "inputActive": {
+  "focus": {
+    "outline": {
+      "outlineWidth": 2,
+      "outlineColor": "theme.accent.default",
+      "radiusOffset": 3
+    },
+
+    "glow": {
       "offsetX": 0,
       "offsetY": 0,
       "blur": 6,
