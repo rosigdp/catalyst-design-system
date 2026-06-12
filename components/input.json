@@ -1,0 +1,53 @@
+{
+  "component": "input",
+
+  "orientation": {
+    "vertical": {
+      "gap": "spacing.xs"
+    },
+
+    "horizontal": {
+      "gap": "spacing.sm"
+    }
+  },
+
+  "label": {
+    "typography": "typography.label",
+
+    "metadata": {
+      "optional": false,
+      "metric": false,
+      "counter": false,
+      "questionIcon": false,
+      "infoIcon": false
+    },
+
+    "icons": {
+      "question": {
+        "typography": "typography.icon",
+        "color": "theme.system.foreground70"
+      },
+
+      "info": {
+        "typography": "typography.icon",
+        "color": "theme.accent.default"
+      }
+    },
+
+    "gap": "spacing.xs"
+  },
+
+  "supportingText": {
+    "typography": "typography.small"
+  },
+
+  "states": {
+    "default": {
+      "supportingText": "theme.system.foreground"
+    },
+
+    "error": {
+      "supportingText": "theme.negative.background"
+    }
+  }
+}
