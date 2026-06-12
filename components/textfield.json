@@ -56,11 +56,11 @@
 
   "addons": {
     "leadingButton": {
-      "component": "button.secondary"
+      "component": "button"
     },
 
     "trailingButton": {
-      "component": "button.secondary"
+      "component": "button"
     }
   },
 
