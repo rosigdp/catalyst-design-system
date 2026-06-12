@@ -111,9 +111,9 @@ Examples:
 
 ### Circle
 
-Use for icon-only buttons.
+Special case, use for icon-only buttons.
 
-Examples:
+Current usage:
 
 * Upload Avatar
 * Help
@@ -172,6 +172,7 @@ Rules:
 * Place primary buttons on the rightmost side of the group.
 * Place destructive buttons on the leftmost side of the group.
 * Place secondary buttons between destructive and primary buttons.
+* All buttons in a group should have the same size.
 
 ## Placement
 
