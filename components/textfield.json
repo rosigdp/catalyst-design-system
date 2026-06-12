@@ -1,17 +1,14 @@
 {
   "component": "textfield",
 
+  "base": "input",
+
   "radius": "radius.default",
 
-  "gap": "spacing.xs",
-
   "content": {
-    "label": {
-      "typography": "typography.label"
-    },
-
     "value": {
-      "typography": "typography.body"
+      "typography": "typography.body",
+      "color": "theme.system.foreground"
     },
 
     "placeholder": {
@@ -19,14 +16,17 @@
       "color": "theme.system.foreground70"
     },
 
-    "supportingText": {
-      "typography": "typography.small"
-    },
-
-    "icon": {
+    "leadingIcon": {
       "typography": "typography.icon",
       "color": "theme.system.foreground70"
-    }
+    },
+
+    "trailingIcon": {
+      "typography": "typography.icon",
+      "color": "theme.system.foreground70"
+    },
+
+    "gap": "spacing.sm"
   },
 
   "modes": {
@@ -54,6 +54,16 @@
     }
   },
 
+  "addons": {
+    "leadingButton": {
+      "component": "button.secondary"
+    },
+
+    "trailingButton": {
+      "component": "button.secondary"
+    }
+  },
+
   "states": {
     "default": {
       "background": "theme.system.background",
@@ -65,6 +75,10 @@
     },
 
     "focus": {
+      "border": {
+        "width": 1,
+        "color": "theme.brand.default"
+      },
       "effect": "effects.focus.glow"
     },
 
@@ -74,8 +88,7 @@
       "border": {
         "width": 1,
         "color": "theme.negative.background"
-      },
-      "supportingText": "theme.negative.background"
+      }
     },
 
     "disabled": {
