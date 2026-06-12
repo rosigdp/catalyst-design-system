@@ -69,6 +69,8 @@
   },
 
   "states": {
+    "default": {},
+    
     "hover": {
       "backgroundOverlay": "theme.system.foreground20"
     },
