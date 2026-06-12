@@ -1,6 +1,13 @@
 {
   "component": "input",
 
+  "anatomy": {
+    "label": true,
+    "control": true,
+    "supportingText": true,
+    "selectionInfobox": true
+  },
+
   "orientation": {
     "vertical": {
       "gap": "spacing.xs"
@@ -13,6 +20,7 @@
 
   "label": {
     "typography": "typography.label",
+    "color": "theme.system.foreground",
 
     "metadata": {
       "optional": false,
@@ -37,8 +45,20 @@
     "gap": "spacing.xs"
   },
 
+  "controlTypes": {
+    "textfield": {},
+    "radioGroup": {},
+    "checkboxGroup": {},
+    "fileUpload": {},
+    "multiSelect": {}
+  },
+
   "supportingText": {
     "typography": "typography.small"
+  },
+
+  "selectionInfobox": {
+    "component": "infobox"
   },
 
   "states": {
