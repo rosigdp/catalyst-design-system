@@ -74,9 +74,7 @@
     },
 
     "focus": {
-      "outlineWidth": 2,
-      "outlineColor": "theme.accent.default",
-      "outlineRadius": "radius.default"
+      "effect": "effects.focus.outline"
     },
 
     "disabled": {
