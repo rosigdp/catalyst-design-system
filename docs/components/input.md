@@ -111,6 +111,15 @@ Rules:
 * Use supporting text only when it adds value.
 * Use guide infobox instead if the input guidance are long and detailed.
 
+## Selection Infobox
+
+Used to contain description or additional context of a selected value of an input control.
+
+Rules:
+
+* Text can be changed depended of selected value.
+* Put on the bottom of input control.
+
 ## States
 
 ### Default
