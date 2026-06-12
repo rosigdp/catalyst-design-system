@@ -64,14 +64,8 @@
       }
     },
 
-    "focused": {
-      "background": "theme.system.background",
-      "text": "theme.system.foreground",
-      "border": {
-        "width": 1,
-        "color": "theme.brand.default"
-      },
-      "shadow": "effects.glow.inputActive"
+    "focus": {
+      "effect": "effects.focus.glow"
     },
 
     "error": {
