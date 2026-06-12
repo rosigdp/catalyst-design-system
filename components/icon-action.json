@@ -26,6 +26,10 @@
       "destructive": {
         "icon": "theme.negative.background"
       }
+    },
+    
+    "focus": {
+      "effect": "effects.focus"
     }
   }
 }
