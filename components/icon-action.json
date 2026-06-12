@@ -26,12 +26,6 @@
       "destructive": {
         "icon": "theme.negative.background"
       }
-    },
-
-    "focus": {
-      "outlineWidth": 2,
-      "outlineColor": "theme.accent.default",
-      "outlineRadius": "radius.default"
     }
   }
 }
