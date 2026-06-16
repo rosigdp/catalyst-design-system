@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  :root {
+    --bg: var(--figma-color-bg, #fff);
+    --bg-secondary: var(--figma-color-bg-secondary, #f5f5f5);
+    --bg-hover: var(--figma-color-bg-hover, #ebebeb);
+    --text: var(--figma-color-text, #1a1a1a);
+    --text-secondary: var(--figma-color-text-secondary, #777);
+    --border: var(--figma-color-border, #e6e6e6);
+    --brand: var(--figma-color-bg-brand, #0d99ff);
+    --brand-text: var(--figma-color-text-onbrand, #fff);
+    --danger: var(--figma-color-text-danger, #e5484d);
+    --success: var(--figma-color-text-success, #1f9e57);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 11px; color: var(--text); background: var(--bg);
+  }
+  body { display: flex; flex-direction: column; }
+
+  header {
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .row.between { justify-content: space-between; }
+  h1 { font-size: 12px; font-weight: 600; margin: 0; }
+  .muted { color: var(--text-secondary); }
+
+  button {
+    font-family: inherit; font-size: 11px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--text);
+    padding: 6px 10px; cursor: pointer; font-weight: 500;
+  }
+  button:hover { background: var(--bg-hover); }
+  button.primary {
+    background: var(--brand); color: var(--brand-text); border-color: var(--brand);
+  }
+  button.primary:hover { filter: brightness(0.95); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  button.link {
+    border: none; background: none; color: var(--brand); padding: 2px 4px;
+  }
+
+  .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  label.check { display: flex; align-items: center; gap: 4px; cursor: pointer; user-select: none; }
+
+  main { flex: 1; overflow-y: auto; padding: 8px 12px; }
+
+  .empty {
+    padding: 24px 16px; text-align: center; color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .empty strong { color: var(--text); display: block; margin-bottom: 6px; }
+
+  .card {
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px;
+    margin-bottom: 8px; display: flex; gap: 8px; align-items: flex-start;
+  }
+  .card.off { opacity: 0.5; }
+  .card .info { flex: 1; min-width: 0; }
+  .src-name {
+    font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .meta { color: var(--text-secondary); margin-top: 2px; }
+  .preview {
+    margin-top: 4px; padding: 2px 6px; background: var(--bg-secondary);
+    border-radius: 4px; white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; font-style: italic; color: var(--text-secondary);
+  }
+  .target { margin-top: 6px; display: flex; align-items: center; gap: 6px; }
+  .arrow { color: var(--text-secondary); }
+  select {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 11px;
+    padding: 5px 6px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text);
+  }
+  .conf {
+    font-size: 10px; padding: 1px 5px; border-radius: 10px;
+    background: var(--bg-secondary); white-space: nowrap;
+  }
+  .conf.hi { color: var(--success); }
+  .conf.mid { color: #b87503; }
+  .conf.lo { color: var(--text-secondary); }
+  .tag {
+    font-size: 9px; padding: 1px 4px; border-radius: 3px;
+    background: var(--bg-secondary); color: var(--text-secondary); margin-left: 4px;
+  }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 10px 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .status { color: var(--text-secondary); flex: 1; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .status.err { color: var(--danger); }
+  .status.ok { color: var(--success); }
+</style>
+</head>
+<body>
+  <header>
+    <div class="row between">
+      <h1>Make → Design System</h1>
+      <button class="link" id="rescan">Rescan</button>
+    </div>
+    <div class="toolbar">
+      <span class="muted" id="catalogInfo">0 components</span>
+      <label class="check"><input type="checkbox" id="hideUnlikely" checked /> Hide unlikely</label>
+      <span style="flex:1"></span>
+      <button class="link" id="selAll">All</button>
+      <button class="link" id="selNone">None</button>
+    </div>
+  </header>
+
+  <main id="list">
+    <div class="empty"><strong>Scanning…</strong></div>
+  </main>
+
+  <footer>
+    <span class="status" id="status"></span>
+    <button class="primary" id="swap" disabled>Swap</button>
+  </footer>
+
+<script>
+  var state = { candidates: [], catalog: [], enabled: {}, choice: {} };
+  var THRESHOLD = 0.35;
+
+  var listEl = document.getElementById('list');
+  var statusEl = document.getElementById('status');
+  var swapBtn = document.getElementById('swap');
+  var catalogInfo = document.getElementById('catalogInfo');
+  var hideUnlikely = document.getElementById('hideUnlikely');
+
+  function post(msg) { parent.postMessage({ pluginMessage: msg }, '*'); }
+
+  function confClass(s) { return s >= 0.6 ? 'hi' : s >= THRESHOLD ? 'mid' : 'lo'; }
+  function pct(s) { return Math.round(s * 100) + '%'; }
+
+  function buildSelect(cand) {
+    var sel = document.createElement('select');
+
+    var skip = document.createElement('option');
+    skip.value = ''; skip.textContent = '— skip —';
+    sel.appendChild(skip);
+
+    var added = {};
+    if (cand.suggestions.length) {
+      var g = document.createElement('optgroup');
+      g.label = 'Suggested';
+      cand.suggestions.forEach(function (s) {
+        var o = document.createElement('option');
+        o.value = s.refId;
+        o.textContent = s.name + '  ·  ' + pct(s.score) + (s.isRemote ? ' (lib)' : '');
+        g.appendChild(o);
+        added[s.refId] = true;
+      });
+      sel.appendChild(g);
+    }
+
+    var all = document.createElement('optgroup');
+    all.label = 'All components';
+    state.catalog.forEach(function (c) {
+      if (added[c.refId]) return;
+      var o = document.createElement('option');
+      o.value = c.refId;
+      o.textContent = c.name + (c.isRemote ? ' (lib)' : '') + (c.isSet ? ' ▸' : '');
+      all.appendChild(o);
+    });
+    if (all.children.length) sel.appendChild(all);
+
+    sel.value = state.choice[cand.id] || '';
+    sel.addEventListener('change', function () {
+      state.choice[cand.id] = sel.value;
+      if (!sel.value) state.enabled[cand.id] = false;
+      render();
+    });
+    return sel;
+  }
+
+  function render() {
+    var hu = hideUnlikely.checked;
+    listEl.innerHTML = '';
+
+    if (state.catalog.length === 0) {
+      listEl.innerHTML =
+        '<div class="empty"><strong>No design-system components found</strong>' +
+        'The plugin scans the <em>current page</em> only. Put the component sets (or ' +
+        'at least one instance of each — a stickersheet works great) on this page, ' +
+        'then press Rescan.</div>';
+      catalogInfo.textContent = '0 components';
+      updateStatus();
+      return;
+    }
+
+    catalogInfo.textContent = state.catalog.length + ' components';
+
+    var visible = state.candidates.filter(function (c) {
+      if (!hu) return true;
+      var best = c.suggestions[0];
+      return (best && best.score >= THRESHOLD) || state.choice[c.id];
+    });
+
+    if (visible.length === 0) {
+      listEl.innerHTML =
+        '<div class="empty"><strong>No likely matches in selection</strong>' +
+        'Uncheck “Hide unlikely” to map layers manually, or select the Make content you pasted.</div>';
+      updateStatus();
+      return;
+    }
+
+    visible.forEach(function (cand) {
+      var on = !!state.enabled[cand.id];
+      var card = document.createElement('div');
+      card.className = 'card' + (on ? '' : ' off');
+
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = on;
+      cb.addEventListener('change', function () {
+        state.enabled[cand.id] = cb.checked;
+        render();
+      });
+
+      var info = document.createElement('div');
+      info.className = 'info';
+
+      var name = document.createElement('div');
+      name.className = 'src-name';
+      name.textContent = cand.name;
+      var tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = cand.kind.toLowerCase();
+      name.appendChild(tag);
+
+      var meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = cand.w + '×' + cand.h;
+
+      info.appendChild(name);
+      info.appendChild(meta);
+
+      if (cand.preview) {
+        var pv = document.createElement('div');
+        pv.className = 'preview';
+        pv.textContent = '“' + cand.preview + '”';
+        info.appendChild(pv);
+      }
+
+      var target = document.createElement('div');
+      target.className = 'target';
+      var arrow = document.createElement('span');
+      arrow.className = 'arrow'; arrow.textContent = '→';
+      target.appendChild(arrow);
+      target.appendChild(buildSelect(cand));
+
+      var best = cand.suggestions[0];
+      if (best) {
+        var conf = document.createElement('span');
+        conf.className = 'conf ' + confClass(best.score);
+        conf.textContent = pct(best.score);
+        target.appendChild(conf);
+      }
+      info.appendChild(target);
+
+      if (cand.variantParts && cand.variantParts.length) {
+        var vp = document.createElement('div');
+        vp.className = 'meta';
+        vp.textContent = 'variant: ' + cand.variantParts.join(' · ');
+        info.appendChild(vp);
+      }
+
+      card.appendChild(cb);
+      card.appendChild(info);
+      listEl.appendChild(card);
+    });
+
+    updateStatus();
+  }
+
+  function pendingMappings() {
+    var out = [];
+    state.candidates.forEach(function (c) {
+      if (state.enabled[c.id] && state.choice[c.id]) {
+        out.push({ nodeId: c.id, refId: state.choice[c.id] });
+      }
+    });
+    return out;
+  }
+
+  function updateStatus(msg, cls) {
+    var n = pendingMappings().length;
+    swapBtn.disabled = n === 0;
+    swapBtn.textContent = n > 0 ? 'Swap ' + n : 'Swap';
+    if (msg !== undefined) {
+      statusEl.textContent = msg;
+      statusEl.className = 'status' + (cls ? ' ' + cls : '');
+    } else {
+      statusEl.textContent = n + ' selected';
+      statusEl.className = 'status';
+    }
+  }
+
+  // --- events ---
+  document.getElementById('rescan').addEventListener('click', function () {
+    listEl.innerHTML = '<div class="empty"><strong>Scanning…</strong></div>';
+    post({ type: 'scan' });
+  });
+  hideUnlikely.addEventListener('change', render);
+  document.getElementById('selAll').addEventListener('click', function () {
+    state.candidates.forEach(function (c) {
+      if (state.choice[c.id]) state.enabled[c.id] = true;
+    });
+    render();
+  });
+  document.getElementById('selNone').addEventListener('click', function () {
+    state.candidates.forEach(function (c) { state.enabled[c.id] = false; });
+    render();
+  });
+  swapBtn.addEventListener('click', function () {
+    var mappings = pendingMappings();
+    if (!mappings.length) return;
+    updateStatus('Swapping ' + mappings.length + '…');
+    swapBtn.disabled = true;
+    post({ type: 'swap', mappings: mappings });
+  });
+
+  // --- messages from main thread ---
+  onmessage = function (event) {
+    var msg = event.data.pluginMessage;
+    if (!msg) return;
+
+    if (msg.type === 'scanned') {
+      state.candidates = msg.candidates || [];
+      state.catalog = msg.catalog || [];
+      // Preserve any choices the user already made; default only new rows.
+      var prevChoice = state.choice || {};
+      var prevEnabled = state.enabled || {};
+      state.enabled = {};
+      state.choice = {};
+      state.candidates.forEach(function (c) {
+        if (prevChoice.hasOwnProperty(c.id)) {
+          state.choice[c.id] = prevChoice[c.id];
+          state.enabled[c.id] = prevEnabled[c.id];
+          return;
+        }
+        var best = c.suggestions[0];
+        if (best) {
+          state.choice[c.id] = best.refId;
+          state.enabled[c.id] = best.score >= THRESHOLD;
+        }
+      });
+      if (msg.error === 'NO_SELECTION') {
+        listEl.innerHTML =
+          '<div class="empty"><strong>Nothing selected</strong>' +
+          'Paste the layers from Figma Make, select them, then press Rescan.</div>';
+        catalogInfo.textContent = '— components';
+        updateStatus();
+      } else if (msg.phase === 'local' && state.catalog.length === 0) {
+        // Local pass found nothing yet; library pass still running — don't flash
+        // the "no components" empty state.
+        listEl.innerHTML = '<div class="empty"><strong>Scanning library…</strong></div>';
+        catalogInfo.textContent = 'scanning…';
+        updateStatus('Scanning library components…');
+      } else {
+        render();
+      }
+    } else if (msg.type === 'progress') {
+      updateStatus(msg.message);
+    } else if (msg.type === 'swapped') {
+      var r = msg.result;
+      // Drop swapped nodes from the local list and refresh.
+      post({ type: 'scan' });
+      var txt = r.success + ' swapped';
+      if (r.skipped) txt += ' · ' + r.skipped + ' skipped';
+      if (r.failed) txt += ' · ' + r.failed + ' failed';
+      updateStatus(txt, r.failed ? 'err' : 'ok');
+    } else if (msg.type === 'selectionchanged') {
+      // Light hint; user presses Rescan to refresh against the new selection.
+      if (msg.count === 0) {
+        statusEl.textContent = 'Selection cleared — Rescan to refresh';
+        statusEl.className = 'status';
+      }
+    } else if (msg.type === 'error') {
+      updateStatus(msg.message, 'err');
+    }
+  };
+</script>
+</body>
+</html>
