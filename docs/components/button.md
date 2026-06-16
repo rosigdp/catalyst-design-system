@@ -97,32 +97,6 @@ Rules:
 * Use only for the primary completion action.
 * When uncertain, use Default.
 
-## Shapes
-
-### Default
-
-Use for buttons containing text.
-
-Examples:
-
-* Save
-* Cancel
-* Delete
-
-### Circle
-
-Special case, use for icon-only buttons.
-
-Current usage:
-
-* Upload Avatar
-* Help
-
-Rules:
-
-* Circle buttons should contain an icon only.
-* Do not place text inside a circle button.
-
 ## Button Types
 
 ### Text + Icon Button

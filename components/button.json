@@ -1,15 +1,7 @@
 {
   "component": "button",
 
-  "shapes": {
-    "default": {
-      "radius": "radius.default"
-    },
-
-    "circle": {
-      "radius": "radius.full"
-    }
-  },
+  "radius": "radius.default",
 
   "content": {
     "text": {
