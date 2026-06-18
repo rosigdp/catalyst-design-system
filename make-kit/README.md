@@ -20,10 +20,12 @@ component sets, variants included.
 | --------------------- | ------------------------------------------------------------- |
 | `build-tokens.js`     | Generates `tokens.css` from `../tokens/*.json` (run with node). |
 | `tokens.css`          | **Generated** — all tokens as CSS variables. Do not hand-edit. |
+| `components.css`      | Pseudo-class styles (focus-visible, hover) that can't be inlined in TSX. |
 | `components/*.tsx`    | Button, Badge, Avatar, TextAction, IconAction, Textfield, Input. |
 | `components/index.ts` | Barrel export.                                                |
 | `Stickersheet.tsx`    | One of every variant — paste into Figma to expose the library and verify names. |
 | `GUIDELINES.md`       | Text to paste into Figma Make's guidelines.                   |
+| `SETUP-IN-MAKE.md`    | Step-by-step guide to plug this kit into a Figma Make project.|
 
 ## Tokens are generated — one source of truth
 
@@ -50,12 +52,14 @@ your changes would be overwritten on the next build.
 
 Every component emits `data-name="Component/variant/size"`:
 
-| Layer name             | → DS component set | Variant props set        |
-| ---------------------- | ------------------ | ------------------------ |
-| `Button/primary/large` | Button             | Variant=primary, Size=large |
-| `Badge/info`           | Badge              | Variant=info             |
-| `Avatar/circle/md`     | Avatar             | Shape=circle, Size=md    |
-| `Textfield/error`      | Textfield          | State=error              |
+| Layer name                                  | → DS component set | Variant props set                                              |
+| ------------------------------------------- | ------------------ | -------------------------------------------------------------- |
+| `Button/primary/large/leadingIcon+label`    | Button             | Variant=Primary, Size=Large, Content=Leading Icon + Label      |
+| `Button/card/large/leadingIcon+label`       | Button             | Variant=Card, Size=Large, Content=Leading Icon + Label         |
+| `Badge/info`                                | Badge              | Variant=Info                                                   |
+| `Avatar/md/circle/image/default/view`       | Avatar             | Size=MD, Shape=Circle, Visualization=Image, State=Default, Mode=View |
+| `Textfield/edit/error`                      | Textfield          | Mode=Edit, State=Error                                         |
+| `Input/error`                               | Input              | State=Error                                                    |
 
 The plugin scores the **base** (`Button`) against your component sets, then maps
 the remaining parts onto whichever variant property contains each value — so

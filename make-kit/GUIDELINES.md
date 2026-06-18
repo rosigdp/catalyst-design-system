@@ -17,15 +17,20 @@ import { Button, Badge, Avatar, TextAction, IconAction, Textfield, Input } from 
 
 Available components and their props:
 
-| Component    | Props (variant / size / state)                          |
-| ------------ | ------------------------------------------------------- |
-| `Button`     | `variant` primary \| secondary \| destructive · `size` default \| large |
-| `Badge`      | `variant` positive \| negative \| warning \| disable \| info |
-| `Avatar`     | `shape` circle \| square · `size` xs \| sm \| md \| lg \| xl · `src` / `initials` |
-| `TextAction` | `variant` link \| action \| destructive                 |
-| `IconAction` | `variant` action \| destructive                         |
-| `Textfield`  | `state` default \| focus \| error \| disabled · `multiLine` |
-| `Input`      | wraps a control: `label`, `supportingText`, `state` default \| error |
+| Component    | Props                                                                          |
+| ------------ | ------------------------------------------------------------------------------ |
+| `Button`     | `variant` primary \| secondary \| destructive \| card · `size` default \| large · `leadingIcon` / `trailingIcon` (content is auto-inferred from which slots are provided) |
+| `Badge`      | `variant` positive \| negative \| warning \| disable \| info                   |
+| `Avatar`     | `shape` circle \| square · `size` xs \| sm \| md \| lg \| xl · `state` default \| disabled · `mode` view \| edit · `src` / `initials` (visualization is auto-inferred from src/initials) |
+| `TextAction` | `variant` link \| action \| destructive                                        |
+| `IconAction` | `variant` action \| destructive · `icon`                                       |
+| `Textfield`  | `mode` edit \| view · `state` default \| focus \| error \| disabled · `multiLine` · `leadingIcon` / `trailingIcon` · `leadingButton` / `trailingButton` |
+| `Input`      | wraps a control: `label`, `supportingText`, `state` default \| error, `optional`, `metric`, `counter`, `questionIcon`, `infoIcon`, `selectionInfobox` |
+
+Notes for Button:
+
+- `card` is an outlined CTA (dashed brand-colored border on white). Use sparingly for "add"-style affordances; per the design system it is only intended for `size="large"` with a leading icon + label.
+- Don't set `content` explicitly. Just provide the relevant slots — `leadingIcon`, `trailingIcon`, or the label as children — and the component sets the right Figma `Content` variant automatically (`Leading Icon + Label`, `Icon Only`, `Label Only`, etc.).
 
 ## Tokens
 
@@ -43,11 +48,20 @@ Theme switching: default = catapa/light, add `class="dark"` for dark, or
 
 ## Naming (critical for design handoff)
 
-Each kit component already emits a `data-name` of the form
-**`Component/variant/size`** (e.g. `Button/primary/large`, `Badge/info`,
-`Avatar/circle/md`). Do not rename or strip these. They let the
-**Make → Design System** Figma plugin map each layer to the matching design-system
-component set and set its variant properties automatically.
+Each kit component already emits a `data-name` carrying its variant properties
+in slash-separated form. Do not rename or strip these — the
+**Make → Design System** Figma plugin matches the base against your component
+set and maps each suffix part to whichever variant property contains that value.
+
+| Component   | data-name shape                                       |
+| ----------- | ----------------------------------------------------- |
+| Button      | `Button/{variant}/{size}/{content}`                   |
+| Badge       | `Badge/{variant}`                                     |
+| Avatar      | `Avatar/{size}/{shape}/{visualization}/{state}/{mode}`|
+| TextAction  | `TextAction/{variant}`                                |
+| IconAction  | `IconAction/{variant}`                                |
+| Textfield   | `Textfield/{mode}/{state}`                            |
+| Input       | `Input/{state}`                                       |
 
 When you must add a wrapper, give it a meaningful `data-name`; never leave layers
 as `Frame`, `Group`, or `div`.

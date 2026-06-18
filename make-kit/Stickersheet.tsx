@@ -17,7 +17,7 @@ import {
  *     see the whole library (the plugin builds its catalog from components that
  *     already exist in the file).
  *  2. Use it to verify Make's layer naming: generate it, copy into Figma, and
- *     confirm the layer names read `Button/primary/large` etc.
+ *     confirm the layer names read `Button/primary/large/labelOnly` etc.
  */
 const Row: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
   <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-sm)" }}>
@@ -45,7 +45,11 @@ export function Stickersheet() {
         <Button variant="primary">Primary</Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="destructive">Destructive</Button>
+        <Button variant="card" size="large" leadingIcon="+">Card</Button>
         <Button variant="primary" size="large">Large</Button>
+        <Button variant="primary" leadingIcon=">">Leading icon</Button>
+        <Button variant="primary" trailingIcon="v">Trailing icon</Button>
+        <Button variant="primary" leadingIcon="x" aria-label="Close" />
         <Button variant="secondary" disabled>Disabled</Button>
       </Row>
 
