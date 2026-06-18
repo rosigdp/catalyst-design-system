@@ -84,6 +84,21 @@ CATAPA: email, password, submit, forgot password link."* You should get a
 screen composed entirely from kit components, no raw divs. Copy into Figma →
 run the **Make → Design System** plugin → swap.
 
+## 7. When Make doesn't preserve names
+
+Sometimes Figma Make pastes layers as `Frame 1234` / `Group 5` instead of the
+kit's `Component/variant/size/...` names — its handling of `data-name` isn't a
+guarantee. In that case:
+
+1. Select the pasted layers in Figma.
+2. Run the plugin and press **Auto-name** before pressing **Swap**.
+3. The plugin walks the selection, infers the right name from each layer's
+   colour/structure (rules in [`RENAME-RULES.md`](./RENAME-RULES.md)), and
+   re-scans so the suggestion list lights up.
+
+You can usually skip this if step 5 verified your generations come through with
+the right names; treat it as the fallback for when Make's output drifts.
+
 ## When you update later
 
 The pieces have clear ownership:

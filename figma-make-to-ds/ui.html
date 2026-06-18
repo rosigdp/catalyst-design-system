@@ -106,7 +106,10 @@
   <header>
     <div class="row between">
       <h1>Make → Design System</h1>
-      <button class="link" id="rescan">Rescan</button>
+      <div class="row">
+        <button class="link" id="autoName" title="Infer kit-convention names from layer structure / colors">Auto-name</button>
+        <button class="link" id="rescan">Rescan</button>
+      </div>
     </div>
     <div class="toolbar">
       <span class="muted" id="catalogInfo">0 components</span>
@@ -310,6 +313,10 @@
     listEl.innerHTML = '<div class="empty"><strong>Scanning…</strong></div>';
     post({ type: 'scan' });
   });
+  document.getElementById('autoName').addEventListener('click', function () {
+    updateStatus('Inferring names from structure…');
+    post({ type: 'normalize' });
+  });
   hideUnlikely.addEventListener('change', render);
   document.getElementById('selAll').addEventListener('click', function () {
     state.candidates.forEach(function (c) {
@@ -371,6 +378,14 @@
       }
     } else if (msg.type === 'progress') {
       updateStatus(msg.message);
+    } else if (msg.type === 'normalized') {
+      if (msg.error === 'NO_SELECTION') {
+        updateStatus('Select layers to auto-name', 'err');
+      } else {
+        var summary = 'Renamed ' + msg.renamed + ' of ' + msg.total + ' layers';
+        updateStatus(summary, msg.renamed > 0 ? 'ok' : '');
+        // A scan was already kicked off in the plugin; UI will refresh on its 'scanned' message.
+      }
     } else if (msg.type === 'swapped') {
       var r = msg.result;
       // Drop swapped nodes from the local list and refresh.

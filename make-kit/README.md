@@ -26,6 +26,7 @@ component sets, variants included.
 | `Stickersheet.tsx`    | One of every variant — paste into Figma to expose the library and verify names. |
 | `GUIDELINES.md`       | Text to paste into Figma Make's guidelines.                   |
 | `SETUP-IN-MAKE.md`    | Step-by-step guide to plug this kit into a Figma Make project.|
+| `RENAME-RULES.md`     | How the plugin's Auto-name button infers kit names from Figma layer structure when Make doesn't preserve `data-name`. |
 
 ## Tokens are generated — one source of truth
 

@@ -251,6 +251,268 @@ async function scan() {
 }
 
 // ---------------------------------------------------------------------------
+// Heuristic naming — infer kit-convention names from Figma node structure.
+//
+// Used when Figma Make pastes layers without preserving the kit's `data-name`
+// attributes. The rules mirror the kit's `Component/variant/size/...` shape so
+// the downstream catalog match + variant-map can pick up where they would have
+// if Make had emitted the names directly.
+//
+// See make-kit/RENAME-RULES.md for the full rule table.
+// ---------------------------------------------------------------------------
+
+function getSolidFill(node) {
+  var fills = node.fills;
+  if (!fills || fills === figma.mixed) return null;
+  for (var i = 0; i < fills.length; i++) {
+    var f = fills[i];
+    if (f.type === 'SOLID' && f.visible !== false) {
+      return {
+        r: Math.round(f.color.r * 255),
+        g: Math.round(f.color.g * 255),
+        b: Math.round(f.color.b * 255),
+        a: f.opacity == null ? 1 : f.opacity
+      };
+    }
+  }
+  return null;
+}
+
+function getStrokeColor(node) {
+  var s = node.strokes;
+  if (!s || s === figma.mixed || !s.length) return null;
+  for (var i = 0; i < s.length; i++) {
+    var stroke = s[i];
+    if (stroke.type === 'SOLID' && stroke.visible !== false) {
+      return {
+        r: Math.round(stroke.color.r * 255),
+        g: Math.round(stroke.color.g * 255),
+        b: Math.round(stroke.color.b * 255)
+      };
+    }
+  }
+  return null;
+}
+
+function rgbClose(a, b, tol) {
+  if (!a || !b) return false;
+  var t = tol == null ? 15 : tol;
+  return Math.abs(a.r - b.r) <= t && Math.abs(a.g - b.g) <= t && Math.abs(a.b - b.b) <= t;
+}
+
+// Canonical Catalyst token colors (catapa/light) the kit emits at runtime.
+var COLORS = {
+  brand:         { r: 0,   g: 201, b: 131 },
+  negative:      { r: 217, g: 98,  b: 79  },
+  white:         { r: 255, g: 255, b: 255 },
+  accent:        { r: 0,   g: 153, b: 255 },
+  foreground:    { r: 51,  g: 51,  b: 51  },
+  disableBg:     { r: 232, g: 232, b: 232 },
+  // Badge backgroundAlternate tints
+  positiveBg:    { r: 209, g: 247, b: 211 },
+  negativeBg:    { r: 255, g: 219, b: 219 },
+  warningBg:     { r: 255, g: 249, b: 223 },
+  infoBg:        { r: 208, g: 243, b: 255 },
+  disableAltBg:  { r: 241, g: 241, b: 241 }
+};
+
+var ICON_FONT_RE = /awesome|material|icons?$/i;
+
+function isIconText(t) {
+  if (!t || t.type !== 'TEXT') return false;
+  var fn = t.fontName;
+  return !!(fn && fn !== figma.mixed && ICON_FONT_RE.test(fn.family || ''));
+}
+
+function findChildren(node) {
+  return ('children' in node ? node.children : []).filter(function (c) {
+    return c.visible !== false;
+  });
+}
+
+function findAllTexts(node) {
+  if (node.type === 'TEXT') return [node];
+  if (!('findAllWithCriteria' in node)) return [];
+  return node.findAllWithCriteria({ types: ['TEXT'] });
+}
+
+// Already in kit convention? Skip inference.
+function looksKitNamed(node) {
+  return /^[A-Z][a-zA-Z]+\/.+/.test(node.name || '');
+}
+
+// ---- Per-component inference ----
+
+function inferButton(node) {
+  var fill = getSolidFill(node);
+  var stroke = getStrokeColor(node);
+  var dashed = !!(node.dashPattern && node.dashPattern.length);
+
+  var variant = null;
+  if (rgbClose(fill, COLORS.brand))         variant = 'primary';
+  else if (rgbClose(fill, COLORS.negative)) variant = 'destructive';
+  else if (rgbClose(fill, COLORS.white))    variant = (stroke && dashed) ? 'card' : (stroke ? 'secondary' : null);
+
+  if (!variant) return null;
+
+  // Confidence guard: a button has children (label/icon) and rounded corners.
+  var kids = findChildren(node);
+  if (!kids.length) return null;
+  var radius = node.cornerRadius;
+  if (typeof radius === 'number' && radius > 32 && variant !== 'card') return null; // too round → likely badge
+
+  var size = node.height >= 50 ? 'large' : 'default';
+
+  // Content from text/icon mix, ordered left-to-right.
+  var texts = findAllTexts(node).slice().sort(function (a, b) {
+    return (a.absoluteBoundingBox && a.absoluteBoundingBox.x) - (b.absoluteBoundingBox && b.absoluteBoundingBox.x);
+  });
+  var leadingIcon = false, trailingIcon = false, hasLabel = false;
+  for (var i = 0; i < texts.length; i++) {
+    if (isIconText(texts[i])) {
+      if (!hasLabel) leadingIcon = true;
+      else trailingIcon = true;
+    } else if ((texts[i].characters || '').trim()) {
+      hasLabel = true;
+    }
+  }
+  var content;
+  if (hasLabel && leadingIcon && trailingIcon) content = 'leadingIcon+label+trailingIcon';
+  else if (hasLabel && leadingIcon) content = 'leadingIcon+label';
+  else if (hasLabel && trailingIcon) content = 'label+trailingIcon';
+  else if (hasLabel) content = 'labelOnly';
+  else content = 'iconOnly';
+
+  return 'Button/' + variant + '/' + size + '/' + content;
+}
+
+function inferBadge(node) {
+  var fill = getSolidFill(node);
+  if (!fill) return null;
+  var radius = node.cornerRadius;
+  // Badge is a small pill (full radius) with one of the alternate tints.
+  if (typeof radius !== 'number' || radius < 30) return null;
+  var variant = null;
+  if (rgbClose(fill, COLORS.positiveBg))   variant = 'positive';
+  else if (rgbClose(fill, COLORS.negativeBg))    variant = 'negative';
+  else if (rgbClose(fill, COLORS.warningBg))     variant = 'warning';
+  else if (rgbClose(fill, COLORS.infoBg))        variant = 'info';
+  else if (rgbClose(fill, COLORS.disableAltBg))  variant = 'disable';
+  if (!variant) return null;
+  if (node.height && node.height > 32) return null; // too tall → likely button
+  return 'Badge/' + variant;
+}
+
+var AVATAR_SIZE_MAP = { 24: 'xs', 36: 'sm', 72: 'md', 108: 'lg', 144: 'xl' };
+
+function inferAvatar(node) {
+  var w = Math.round(node.width || 0);
+  var h = Math.round(node.height || 0);
+  if (!w || w !== h) return null;
+  var sz = AVATAR_SIZE_MAP[w];
+  if (!sz) return null;
+  var radius = node.cornerRadius;
+  var shape = (typeof radius === 'number' && radius > w / 3) ? 'circle' : 'square';
+  // Visualization: image (IMG/RECT with image fill), initials (TEXT child), else placeholder
+  var kids = findChildren(node);
+  var viz = 'placeholder';
+  for (var i = 0; i < kids.length; i++) {
+    var k = kids[i];
+    if (k.type === 'TEXT' && !isIconText(k) && (k.characters || '').trim()) { viz = 'initials'; break; }
+    var f = k.fills;
+    if (f && f !== figma.mixed) {
+      for (var j = 0; j < f.length; j++) {
+        if (f[j].type === 'IMAGE') { viz = 'image'; break; }
+      }
+    }
+  }
+  // State: grayscale = disabled (effects/filters can't be inspected; lean on opacity heuristic)
+  var state = (node.opacity != null && node.opacity < 0.9) ? 'disabled' : 'default';
+  return 'Avatar/' + sz + '/' + shape + '/' + viz + '/' + state + '/view';
+}
+
+function inferTextAction(node) {
+  // Single TEXT with underline OR a wrapper with one underlined TEXT child.
+  var t = node.type === 'TEXT' ? node : (findChildren(node).filter(function (c) { return c.type === 'TEXT'; })[0]);
+  if (!t || t.type !== 'TEXT') return null;
+  var deco = t.textDecoration;
+  if (deco !== 'UNDERLINE') return null;
+  var fills = t.fills;
+  if (!fills || fills === figma.mixed || !fills.length) return null;
+  var f = fills[0];
+  if (f.type !== 'SOLID') return null;
+  var rgb = { r: Math.round(f.color.r * 255), g: Math.round(f.color.g * 255), b: Math.round(f.color.b * 255) };
+  var variant = null;
+  if (rgbClose(rgb, COLORS.accent)) variant = 'link';
+  else if (rgbClose(rgb, COLORS.brand)) variant = 'action';
+  else variant = 'destructive';
+  return 'TextAction/' + variant;
+}
+
+function inferIconAction(node) {
+  // Icon-only button-ish: small frame with a single icon-font text and no fill.
+  if (node.type !== 'FRAME' && node.type !== 'GROUP') return null;
+  var kids = findChildren(node);
+  if (kids.length !== 1) return null;
+  if (!isIconText(kids[0])) return null;
+  var fill = getSolidFill(node);
+  if (fill) return null;
+  // No way to tell action vs destructive without color context; default to action.
+  return 'IconAction/action';
+}
+
+function inferTextfield(node) {
+  // A frame with border + background containing an input/text child.
+  if (!('children' in node)) return null;
+  var stroke = getStrokeColor(node);
+  if (!stroke) return null;
+  var fill = getSolidFill(node);
+  if (!fill) return null;
+  var state = 'default';
+  if (rgbClose(stroke, COLORS.brand)) state = 'focus';
+  else if (rgbClose(stroke, COLORS.negative)) state = 'error';
+  else if (rgbClose(fill, COLORS.disableBg)) state = 'disabled';
+  // Mode: detect by whether there's an editable-looking inner element. Without
+  // that signal, assume edit.
+  return 'Textfield/edit/' + state;
+}
+
+function inferKitName(node) {
+  if (looksKitNamed(node)) return null;
+  try {
+    return inferButton(node)
+        || inferBadge(node)
+        || inferAvatar(node)
+        || inferTextAction(node)
+        || inferIconAction(node)
+        || inferTextfield(node);
+  } catch (e) { return null; }
+}
+
+async function normalizeNames() {
+  var selection = figma.currentPage.selection;
+  if (!selection || !selection.length) {
+    figma.ui.postMessage({ type: 'normalized', renamed: 0, total: 0, error: 'NO_SELECTION' });
+    return;
+  }
+  var nodes = collectCandidates(selection);
+  var renamed = 0;
+  var preview = [];
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i];
+    var name = inferKitName(n);
+    if (name && name !== n.name) {
+      var before = n.name;
+      try { n.name = name; renamed++; preview.push({ from: before, to: name }); }
+      catch (e) { /* locked node — skip */ }
+    }
+  }
+  figma.ui.postMessage({ type: 'normalized', renamed: renamed, total: nodes.length, preview: preview.slice(0, 8) });
+  // Re-scan so suggestions reflect the new names.
+  await scan();
+}
+
+// ---------------------------------------------------------------------------
 // Swapping
 // ---------------------------------------------------------------------------
 
@@ -437,6 +699,8 @@ figma.ui.onmessage = async function (msg) {
   try {
     if (msg.type === 'scan') {
       await scan();
+    } else if (msg.type === 'normalize') {
+      await normalizeNames();
     } else if (msg.type === 'swap') {
       var result = await performSwap(msg.mappings || []);
       figma.ui.postMessage({ type: 'swapped', result: result });
