@@ -1,14 +1,23 @@
 import React from "react";
 
 export type TextfieldState = "default" | "focus" | "error" | "disabled";
+export type TextfieldMode = "edit" | "view";
 
 export interface TextfieldProps {
   state?: TextfieldState;
+  /** `edit` shows the input; `view` renders the value as read-only text. */
+  mode?: TextfieldMode;
   value?: string;
   placeholder?: string;
   multiLine?: boolean;
+  /** Icon glyph rendered before the value. Use for inline icons. */
   leadingIcon?: React.ReactNode;
+  /** Icon glyph rendered after the value. */
   trailingIcon?: React.ReactNode;
+  /** Inline button rendered before the value (e.g. currency toggle). */
+  leadingButton?: React.ReactNode;
+  /** Inline button rendered after the value (e.g. clear, search). */
+  trailingButton?: React.ReactNode;
   style?: React.CSSProperties;
   onChange?: (value: string) => void;
 }
@@ -38,15 +47,18 @@ const STATE: Record<TextfieldState, React.CSSProperties> = {
 
 /**
  * Catalyst Textfield.
- * Root layer name → `Textfield/{state}`.
+ * Root layer name → `Textfield/{mode}/{state}`.
  */
 export function Textfield({
   state = "default",
+  mode = "edit",
   value,
   placeholder,
   multiLine = false,
   leadingIcon,
   trailingIcon,
+  leadingButton,
+  trailingButton,
   style,
   onChange,
 }: TextfieldProps) {
@@ -55,9 +67,42 @@ export function Textfield({
       ? "var(--theme-disable-foreground)"
       : "var(--theme-system-foreground)";
 
+  // View mode: render the value as plain text. No input chrome, no border/bg —
+  // matches textfield.json#modes.view (an empty mode block = inherits the value
+  // but is non-interactive). Keeps the layer-name shape so the plugin still
+  // sets the Mode variant correctly.
+  if (mode === "view") {
+    return (
+      <div
+        data-name={`Textfield/${mode}/${state}`}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "var(--spacing-sm)",
+          padding: "var(--spacing-sm) 0",
+          font: "var(--typography-body)",
+          color: textColor,
+          ...style,
+        }}
+      >
+        {leadingIcon ? (
+          <span data-name="leadingIcon" style={{ color: "var(--theme-system-foreground-70)", font: "var(--typography-icon)" }}>
+            {leadingIcon}
+          </span>
+        ) : null}
+        <span data-name="value">{value || ""}</span>
+        {trailingIcon ? (
+          <span data-name="trailingIcon" style={{ color: "var(--theme-system-foreground-70)", font: "var(--typography-icon)" }}>
+            {trailingIcon}
+          </span>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div
-      data-name={`Textfield/${state}`}
+      data-name={`Textfield/${mode}/${state}`}
       style={{
         display: "flex",
         alignItems: multiLine ? "flex-start" : "center",
@@ -69,6 +114,11 @@ export function Textfield({
         ...style,
       }}
     >
+      {leadingButton ? (
+        <span data-name="leadingButton" style={{ display: "inline-flex", alignItems: "center" }}>
+          {leadingButton}
+        </span>
+      ) : null}
       {leadingIcon ? (
         <span data-name="leadingIcon" style={{ color: "var(--theme-system-foreground-70)", font: "var(--typography-icon)" }}>
           {leadingIcon}
@@ -113,6 +163,11 @@ export function Textfield({
       {trailingIcon ? (
         <span data-name="trailingIcon" style={{ color: "var(--theme-system-foreground-70)", font: "var(--typography-icon)" }}>
           {trailingIcon}
+        </span>
+      ) : null}
+      {trailingButton ? (
+        <span data-name="trailingButton" style={{ display: "inline-flex", alignItems: "center" }}>
+          {trailingButton}
         </span>
       ) : null}
     </div>

@@ -1,7 +1,13 @@
 import React from "react";
 
-export type ButtonVariant = "primary" | "secondary" | "destructive";
+export type ButtonVariant = "primary" | "secondary" | "destructive" | "card";
 export type ButtonSize = "default" | "large";
+export type ButtonContent =
+  | "leadingIcon+label+trailingIcon"
+  | "leadingIcon+label"
+  | "label+trailingIcon"
+  | "labelOnly"
+  | "iconOnly";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -9,6 +15,8 @@ export interface ButtonProps
   size?: ButtonSize;
   leadingIcon?: React.ReactNode;
   trailingIcon?: React.ReactNode;
+  /** Optional override; otherwise inferred from which slots are provided. */
+  content?: ButtonContent;
 }
 
 const VARIANT: Record<ButtonVariant, React.CSSProperties> = {
@@ -30,6 +38,15 @@ const VARIANT: Record<ButtonVariant, React.CSSProperties> = {
     border: "none",
     boxShadow: "var(--shadow-sm)",
   },
+  // Card — outlined CTA with dashed brand-colored border. Per Figma matrix,
+  // only valid for size=large + content=leadingIcon+label, but the component
+  // doesn't hard-enforce that so Make can compose freely.
+  card: {
+    background: "var(--theme-system-background)",
+    color: "var(--theme-brand-default)",
+    border: "1px dashed var(--theme-brand-default)",
+    boxShadow: "none",
+  },
 };
 
 const SIZE: Record<ButtonSize, React.CSSProperties> = {
@@ -37,25 +54,46 @@ const SIZE: Record<ButtonSize, React.CSSProperties> = {
   large: { padding: "var(--spacing-md) var(--spacing-lg)" },
 };
 
+function inferContent(
+  hasLeading: boolean,
+  hasTrailing: boolean,
+  hasLabel: boolean,
+): ButtonContent {
+  if (hasLabel && hasLeading && hasTrailing) return "leadingIcon+label+trailingIcon";
+  if (hasLabel && hasLeading) return "leadingIcon+label";
+  if (hasLabel && hasTrailing) return "label+trailingIcon";
+  if (!hasLabel && (hasLeading || hasTrailing)) return "iconOnly";
+  return "labelOnly";
+}
+
 /**
  * Catalyst Button.
- * Root layer name → `Button/{variant}/{size}` so the Make → Design System
- * plugin can map it to the Button component set and set variant properties.
+ * Root layer name → `Button/{variant}/{size}/{content}` so the Make → Design
+ * System plugin can map it to the Button component set and set every variant
+ * property (Variant, Size, Content) automatically.
  */
 export function Button({
   variant = "primary",
   size = "default",
   leadingIcon,
   trailingIcon,
+  content,
   children,
   style,
   disabled,
+  className,
   ...rest
 }: ButtonProps) {
+  const hasLabel = children !== undefined && children !== null && children !== false && children !== "";
+  const inferred = content || inferContent(!!leadingIcon, !!trailingIcon, !!hasLabel);
+
+  // Icon color tracks the text color for each variant.
   const iconColor =
     variant === "secondary"
       ? "var(--theme-system-foreground-70)"
-      : "var(--theme-system-on-surface-brand)";
+      : variant === "card"
+        ? "var(--theme-brand-default)"
+        : "var(--theme-system-on-surface-brand)";
 
   const base: React.CSSProperties = {
     display: "inline-flex",
@@ -78,11 +116,18 @@ export function Button({
     ...style,
   };
 
+  // Icon-only adjusts to a square-ish pad so it doesn't look stretched.
+  if (inferred === "iconOnly") {
+    base.padding = "var(--spacing-sm)";
+  }
+
   return (
     <button
-      data-name={`Button/${variant}/${size}`}
+      data-name={`Button/${variant}/${size}/${inferred}`}
+      data-catalyst-focus="button"
       disabled={disabled}
       style={base}
+      className={className}
       {...rest}
     >
       {leadingIcon ? (
@@ -90,7 +135,7 @@ export function Button({
           {leadingIcon}
         </span>
       ) : null}
-      <span data-name="text">{children}</span>
+      {hasLabel ? <span data-name="text">{children}</span> : null}
       {trailingIcon ? (
         <span data-name="trailingIcon" style={{ color: iconColor, font: "var(--typography-icon)" }}>
           {trailingIcon}

@@ -1,0 +1,41 @@
+/* Catalyst Make Kit — interactive styles that can't be expressed in inline
+ * React style props (pseudo-classes). Import alongside tokens.css.
+ *
+ * import "./tokens.css";
+ * import "./components.css";
+ */
+
+/* Focus outline for all kit buttons (Button, IconAction, Avatar supporting
+ * button). Blue accent ring per effects.focus.outline. This is the focus
+ * styling that Figma's variant matrix struggles to express — it lives here so
+ * Make-generated screens still get it at runtime.
+ */
+[data-catalyst-focus="button"]:focus-visible,
+[data-name^="IconAction/"]:focus-visible,
+[data-name="supportingButton"]:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* Hover overlay for buttons: a subtle foreground-20 wash. Inline styles can't
+ * do :hover, so it goes here.
+ */
+[data-catalyst-focus="button"]:not([disabled]):hover {
+  filter: brightness(0.96);
+}
+
+/* TextAction hover keeps the underline but slightly fades to indicate state. */
+[data-name^="TextAction/"]:hover {
+  opacity: 0.85;
+}
+
+/* IconAction hover swaps the icon color per the spec
+ * (action → brand, destructive → negative). The kit emits the variant in the
+ * data-name, so the CSS can branch on it.
+ */
+[data-name^="IconAction/action"]:not([disabled]):hover {
+  color: var(--theme-brand-default);
+}
+[data-name^="IconAction/destructive"]:not([disabled]):hover {
+  color: var(--theme-negative-background);
+}

@@ -45,29 +45,41 @@
     }
   },
 
-  "supportingButton": {
-    "component": "button",
-    "shape": "circle",
-    "size": "default",
-    "variant": "secondary",
-    "placement": {
-      "horizontal": "right",
-      "vertical": "bottom",
-      "overlap": "50%"
-    }
+  "modes": {
+    "edit": {
+      "supportingButton": {
+        "component": "button",
+        "variant": "secondary",
+        "size": "default",
+
+        "shape": "circle",
+        "radius": "radius.full",
+
+        "paddingY": "spacing.sm",
+        "paddingX": "spacing.sm",
+
+        "border": null,
+        "shadow": "effects.shadow.sm",
+
+        "placement": {
+          "horizontal": "right",
+          "vertical": "bottom",
+          "overlap": "50%"
+        }
+      }
+    },
+
+    "view": {}
   },
 
   "states": {
-    "default": {
-      "visualization": ["image", "initials"]
-    },
-
-    "empty": {
-      "visualization": "placeholder"
-    },
+    "default": {},
 
     "disabled": {
-      "grayscale": true
+      "grayscale": true,
+      "supportingButton": {
+        "state": "disabled"
+      }
     }
   }
 }

@@ -31,6 +31,14 @@
     }
   },
 
+  "contents": {
+    "leadingIcon+label+trailingIcon": { "slots": ["leadingIcon", "label", "trailingIcon"] },
+    "leadingIcon+label":              { "slots": ["leadingIcon", "label"] },
+    "label+trailingIcon":             { "slots": ["label", "trailingIcon"] },
+    "labelOnly":                      { "slots": ["label"] },
+    "iconOnly":                       { "slots": ["icon"] }
+  },
+
   "variants": {
     "primary": {
       "background": "theme.brand.default",
@@ -57,6 +65,22 @@
       "icon": "theme.system.onSurfaceBrand",
       "border": null,
       "shadow": "effects.shadow.sm"
+    },
+
+    "card": {
+      "background": "theme.system.background",
+      "text": "theme.brand.default",
+      "icon": "theme.brand.default",
+      "border": {
+        "width": 1,
+        "style": "dashed",
+        "color": "theme.brand.default"
+      },
+      "shadow": null,
+      "constraints": {
+        "size": "large",
+        "content": "leadingIcon+label"
+      }
     }
   },
 
